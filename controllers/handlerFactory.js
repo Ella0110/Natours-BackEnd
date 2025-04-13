@@ -45,7 +45,7 @@ exports.createOne = (Model) =>
 exports.getOne = (Model, popuOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
-    if (popuOptions) query = query.populate(popuOptions); // 对populate做特殊处理
+    if (popuOptions) query = query.populate(popuOptions); // 对 populate 做特殊处理
     const doc = await query;
 
     if (!doc) {
@@ -62,7 +62,7 @@ exports.getOne = (Model, popuOptions) =>
 
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    // 这里是为了只获取特定tour的全部review
+    // 这里是为了只获取特定 tour 的全部 review
     // To allow for nested GET reviews on tour
     let filter = {};
     if (req.params.tourId) filter = { tour: req.params.tourId };

@@ -19,18 +19,18 @@ const signToken = (id) =>
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
-  // 配置cookie信息
+  // 配置 cookie 信息
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 1000,
     ),
     httpOnly: true,
   };
-  // 生产环境下启用secure，因为启用后只能在https环境下收发cookie，开发环境无法测试
+  // 生产环境下启用 secure，因为启用后只能在 https 环境下收发 cookie，开发环境无法测试
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  // 配置cookie
+  // 配置 cookie
   res.cookie('jwt', token, cookieOptions);
-  // 配置password不返回，无论是登录还是注册
+  // 配置 password 不返回，无论是登录还是注册
   user.password = undefined;
   // 发送
   res.status(statusCode).json({
@@ -97,6 +97,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // 2) Verification token
+  // 这里的 promisify 将基于回调的函数转换为基于 Promise 的函数
+  // 如果签名正确，jwt.verify 会返回正确的 payload，其中包含了用户 id 和过期时间，方便后面调用
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   console.log(decoded);
 
@@ -143,7 +145,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 2) Generate the random reset token
   const resetToken = user.createPasswordResetToken();
   await user.save({
-    validateBeforeSave: false, // 关闭validator
+    // validateBeforeSave: false, // 关闭 validator
   });
 
   // 3) Send it to user's email
@@ -177,14 +179,14 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on token
-  // 将用户reset携带过来的随机token加密，用于后面匹配数据库
+  // 将用户 reset 携带过来的随机 token 加密，用于后面匹配数据库
   const hashedToken = crypto
     .createHash('sha256')
     .update(req.params.token)
     .digest('hex');
 
   // 2) If token not expired, and there is user, set the new password
-  // 这里先check数据库中是否存在这个随机token，如果存在，检查token是否过期，如果两个都满足，就会返回user，否则就不会
+  // 这里先 check 数据库中是否存在这个随机 token，如果存在，检查 token 是否过期，如果两个都满足，就会返回 user，否则就不会
   const user = await User.findOne({
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() },
@@ -196,7 +198,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 更新密码
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
-  // 删除reset token及过期时间
+  // 删除 reset token 及过期时间
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   // 保存到数据库
@@ -208,7 +210,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   // 1) Get user from collection
-  // 为什么用findById而不用findOne，因为用户想更新密码，说明他已经是登录状态，登录状态下都会被保护，所以我们能通过token直接拿到他的id
+  // 为什么用 findById 而不用 findOne，因为用户想更新密码，说明他已经是登录状态，登录状态下都会被保护，所以我们能通过 token 直接拿到他的 id
   const user = await User.findById(req.user.id).select('+password');
   // 2) Check if posted current password is correct
   if (!(await user.correctPassword(req.body.currentPassword, user.password))) {

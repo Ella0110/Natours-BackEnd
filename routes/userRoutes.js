@@ -9,7 +9,7 @@ router.post('/login', authController.login);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
-// 因为middleware与顺序关系很紧密，在这里使用这个middleware意味着这个middleware之后所有的route都会被保护，需要登录才能执行
+// 因为 middleware 与顺序关系很紧密，在这里使用这个 middleware 意味着这个 middleware 之后所有的 route 都会被保护，需要登录才能执行
 // Protect all routes after this middleware
 router.use(authController.protect);
 

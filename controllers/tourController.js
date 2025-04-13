@@ -1,5 +1,4 @@
 const TourSchema = require('../models/tourModel');
-// const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
@@ -41,7 +40,6 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
 
 exports.getMonthPlan = catchAsync(async (req, res, next) => {
   const year = req.params.year * 1;
-  // console.log(year);
   const plan = await TourSchema.aggregate([
     {
       $unwind: '$startDates',
@@ -70,7 +68,6 @@ exports.getMonthPlan = catchAsync(async (req, res, next) => {
       $sort: { numTourStarts: -1 },
     },
   ]);
-  // console.log(plan);
   res.status(200).json({
     status: 'success',
     data: plan,

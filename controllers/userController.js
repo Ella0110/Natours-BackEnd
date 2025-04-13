@@ -24,12 +24,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Update user document
-  // 这里不使用save()而是update是因为: 首先save不能用于update，他们是互斥的；其次save需要验证password和password Confirm，但这里不能输入密码
-  // 这里使用filteredBody是因为如果直接使用req.body，用户可能直接在body中输入role:admin获取权限，这是很大的问题，需要避免，只能让用户修改固定内容
+  // 这里不使用 save() 而是 update 是因为：首先 save 不能用于 update，他们是互斥的；其次 save 需要验证 password 和 password Confirm，但这里不能输入密码
+  // 这里使用 filteredBody 是因为如果直接使用 req.body，用户可能直接在 body 中输入 role:admin 获取权限，这是很大的问题，需要避免，只能让用户修改固定内容
   const filteredBody = filterObj(req.body, 'name', 'email');
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true, // 返回更新后的数据，而不是原来的
-    runValidators: true, // 保证Update也能使用shcema中的验证机制
+    runValidators: true, // 保证 Update 也能使用 shcema 中的验证机制
   });
 
   // 3) SEND RESPONSE

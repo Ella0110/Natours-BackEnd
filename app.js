@@ -15,8 +15,8 @@ const reviewRouter = require('./routes/reviewRoutes');
 const app = express();
 
 // GLOBAL MIDDLEWARE
-// Set security HTTP headers
-app.use(helmet()); //放在middleware的开头
+// Set security HTTP headers, 放在 middleware 的开头
+app.use(helmet());
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Limit requests from same API
-// 一小时内允许来自同一个IP的100个请求
+// 一小时内允许来自同一个 IP 的 100 个请求
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
@@ -32,17 +32,17 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Body parser, reading data from body into req.body
-app.use(express.json({ limit: '10kb' })); // 只能接受小于10k的req.body
+// Body parser, reading data from body into req.body，只能接受小于 10k 的 req.body
+app.use(express.json({ limit: '10kb' }));
 
 // Data sanitization against NOSQL query injection
-// 查看req.body, req.query, req.params，过滤所有的$和.符号
+// 查看 req.body, req.query, req.params，过滤所有的$和。符号
 app.use(mongoSanitize());
 
 // Data sanitization against XSS
 app.use(xss());
 
-//Prevent parameter pollution
+// Prevent parameter pollution
 app.use(
   hpp({
     whitelist: [
@@ -60,11 +60,11 @@ app.use(
 app.use(express.static(`${__dirname}/public`));
 
 // Test middleware
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  // console.log(req.headers);
-  next();
-});
+// app.use((req, res, next) => {
+//     req.requestTime = new Date().toISOString();
+//     // console.log(req.headers);
+//     next();
+// });
 
 // ROUTES
 app.use('/api/v1/tours', tourRouter);
