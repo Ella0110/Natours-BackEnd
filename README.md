@@ -13,7 +13,7 @@ A RESTful API for the Natours travel booking application, built with Node.js, Ex
 - **MongoDB** & **Mongoose** for data storage and modeling  
 - Security: `helmet`, `express-rate-limit`, `hpp`, `express-mongo-sanitize`, `xss-clean`  
 - Authentication: `jsonwebtoken`, `bcryptjs`  
-- Testing: `jest` with coverage reports :contentReference[oaicite:1]{index=1}
+- Testing: `jest` with coverage reports
 
 ## Installation
 
@@ -27,7 +27,7 @@ A RESTful API for the Natours travel booking application, built with Node.js, Ex
 
 ## Configuration
 Create a `config.env` file in the root with:
-``` bash
+``` ini
 PORT=3000
 DATABASE=<your-MongoDB-URI>
 DATABASE_PASSWORD=<your-password>
