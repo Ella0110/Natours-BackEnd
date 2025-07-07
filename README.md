@@ -1,6 +1,6 @@
 # Natours-BackEnd
 
-A RESTful API for the Natours travel booking application, built with Node.js, Express, and MongoDB. :contentReference[oaicite:0]{index=0}
+A RESTful API for the Natours travel booking application, built with Node.js, Express, and MongoDB.
 
 ## Features
 - **Tours**: Create, read, update, delete tour data  
